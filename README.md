@@ -17,6 +17,7 @@ pip install pointgrid
 ## Usage
 
 ```python
+from pointgrid import align_points_to_grid
 from sklearn import datasets
 
 # create fake data
