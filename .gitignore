@@ -1,0 +1,9 @@
+*.pyc
+*.swp
+*.pem
+*.DS_Store
+__pycache__
+build
+dist
+*.egg-info
+.ipynb_checkpoints
