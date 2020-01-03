@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup (
   name='pointgrid',
-  version='0.0.1',
+  version='0.0.2',
   packages=['pointgrid'],
   keywords = ['data-visualization', 'scatterplots', 'pointcloud', 'overplotting'],
   description='Transform a 2D distribution into a hexagonal layout',

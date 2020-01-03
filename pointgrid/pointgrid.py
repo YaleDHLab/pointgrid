@@ -73,7 +73,7 @@ def align_points_to_grid(arr, fill=0.1, optimal_assignments=False, log_every=Non
   grid = create_mesh(arr, h=h, w=w)
   # fill the mesh
   print(' * filling mesh')
-  df = pd.DataFrame(arr, columns=['x', 'y'])
+  df = pd.DataFrame(arr, columns=['x', 'y']).copy(deep=True)
   # find the bounds for the distribution
   bounds = get_bounds(arr)
   # store the number of points slotted
