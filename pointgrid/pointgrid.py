@@ -84,7 +84,7 @@ def get_bounds(arr, pad=0.2):
     y_dom[1] + np.abs((y_dom[1]-y_dom[0])*pad),
   ]
 
-def create_mesh(h=100, w=100, checkerboard=True):
+def create_mesh(h=100, w=100, bounds=[], checkerboard=True):
   '''
   Given a 2D array create a mesh that will hold updated point positions
   @kwarg h int:
