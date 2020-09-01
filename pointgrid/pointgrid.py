@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import time, base64, math
 
-def align_points_to_grid(arr, fill=0.1, pad=0.0, optimal_assignments=False, log_every=None):
+def align_points_to_grid(arr, fill=0.1, pad=0.0, optimal_assignments=False, log_every=None, checkerboard=True):
   '''
   Snap each point in `arr` to the closest unoccupied slot in a mesh
   @arg arr numpy.ndarray:
@@ -21,6 +21,8 @@ def align_points_to_grid(arr, fill=0.1, pad=0.0, optimal_assignments=False, log_
     if True assigns each point to its closest open grid point, otherwise an
     approximately optimal open grid point is selected. True requires more
     time to compute
+  @kwarg checkerboard bool:
+    whether to use checkerboard (True) or square grid (False) pattern
   @returns numpy.ndarray:
     with shape identical to the shape of `arr`
   '''
@@ -30,7 +32,7 @@ def align_points_to_grid(arr, fill=0.1, pad=0.0, optimal_assignments=False, log_
   # find the bounds for the distribution
   bounds = get_bounds(arr, pad=pad)
   # create the grid mesh
-  grid = create_mesh(arr, h=h, w=w, bounds=bounds)
+  grid = create_mesh(checkerboard=checkerboard, h=h, w=w, bounds=bounds)
   # fill the mesh
   print(' * filling mesh')
   df = pd.DataFrame(arr, columns=['x', 'y']).copy(deep=True)
@@ -82,17 +84,17 @@ def get_bounds(arr, pad=0.2):
     y_dom[1] + np.abs((y_dom[1]-y_dom[0])*pad),
   ]
 
-def create_mesh(arr, h=100, w=100, bounds=[]):
+def create_mesh(h=100, w=100, bounds=[], checkerboard=True):
   '''
   Given a 2D array create a mesh that will hold updated point positions
-  @arg arr numpy.ndarray:
-    a numpy array with shape (n,2)
   @kwarg h int:
     the number of unique height positions to create
   @kwarg w int:
     the number of unique width positions to create
   @kwarg bounds arr:
     a list with [y_min, y_max, x_min, x_max]
+  @kwarg checkerboard bool:
+    whether to use checkerboard (True) or square grid (False) pattern
   @returns pandas.core.frame.DataFrame
      dataframe containing the available grid positions
   '''
@@ -101,12 +103,15 @@ def create_mesh(arr, h=100, w=100, bounds=[]):
   y_vals = np.arange(bounds[0], bounds[1], (bounds[1]-bounds[0])/h)
   x_vals = np.arange(bounds[2], bounds[3], (bounds[3]-bounds[2])/w)
   # create the dense mesh
-  data = np.tile(
-    [[0, 1], [1, 0]],
-    np.array([
-      int(np.ceil(len(y_vals) / 2)),
-      int(np.ceil(len(x_vals) / 2)),
-    ]))
+  if checkerboard:
+    data = np.tile(
+      [[0, 1], [1, 0]],
+      np.array([
+        int(np.ceil(len(y_vals) / 2)),
+        int(np.ceil(len(x_vals) / 2)),
+      ]))
+  else:
+    data = np.ones((len(y_vals), len(x_vals)), dtype=np.int32)
   # ensure each axis has an even number of slots
   if len(y_vals) % 2 != 0 or len(x_vals) % 2 != 0:
     data = data[0:len(y_vals), 0:len(x_vals)]
