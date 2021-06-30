@@ -3,7 +3,13 @@ import pandas as pd
 import numpy as np
 import time, base64, math
 
-def align_points_to_grid(arr, fill=0.1, pad=0.0, optimal_assignments=False, log_every=None, checkerboard=True):
+def align_points_to_grid(arr,
+  fill=0.1,
+  pad=0.0,
+  optimal_assignments=False,
+  log_every=None,
+  checkerboard=True,
+  verbose=False):
   '''
   Snap each point in `arr` to the closest unoccupied slot in a mesh
   @arg arr numpy.ndarray:
@@ -32,9 +38,9 @@ def align_points_to_grid(arr, fill=0.1, pad=0.0, optimal_assignments=False, log_
   # find the bounds for the distribution
   bounds = get_bounds(arr, pad=pad)
   # create the grid mesh
-  grid = create_mesh(checkerboard=checkerboard, h=h, w=w, bounds=bounds)
+  grid = create_mesh(checkerboard=checkerboard, h=h, w=w, bounds=bounds, verbose=verbose)
   # fill the mesh
-  print(' * filling mesh')
+  if verbose: print(' * filling mesh')
   df = pd.DataFrame(arr, columns=['x', 'y']).copy(deep=True)
   # store the number of points slotted
   c = 0
@@ -84,7 +90,7 @@ def get_bounds(arr, pad=0.2):
     y_dom[1] + np.abs((y_dom[1]-y_dom[0])*pad),
   ]
 
-def create_mesh(h=100, w=100, bounds=[], checkerboard=True):
+def create_mesh(h=100, w=100, bounds=[], checkerboard=True, verbose=False):
   '''
   Given a 2D array create a mesh that will hold updated point positions
   @kwarg h int:
@@ -98,7 +104,7 @@ def create_mesh(h=100, w=100, bounds=[], checkerboard=True):
   @returns pandas.core.frame.DataFrame
      dataframe containing the available grid positions
   '''
-  print(' * creating mesh with size', h, w)
+  if verbose: print(' * creating mesh with size', h, w)
   # create array of valid positions
   y_vals = np.arange(bounds[0], bounds[1], (bounds[1]-bounds[0])/h)
   x_vals = np.arange(bounds[2], bounds[3], (bounds[3]-bounds[2])/w)
