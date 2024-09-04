@@ -1,3 +1,7 @@
+# Note: This repository has been archived
+This project was developed under a previous phase of the Yale Digital Humanities Lab. Now a part of Yale Library’s Computational Methods and Data department, the Lab no longer includes this project in its scope of work. As such, it will receive no further updates.
+
+
 # Pointgrid
 
 > Transform a distribution of 2D points to a grid that preserves the global distribution shape. Useful for avoiding overplotting in data visualizations.
